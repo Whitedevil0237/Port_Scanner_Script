@@ -17,3 +17,4 @@ Install Netcat if not available:
 ```bash
 sudo apt install netcat  # Debian/Ubuntu
 sudo yum install nc      # RHEL/CentOS
+./port_scanner.sh 192.168.1.1 20 80
