@@ -1,20 +1,30 @@
-# Port Scanner Script
+#!/bin/bash
 
-A simple Bash script to perform port scanning on a target host using `nc` (Netcat). This script allows you to scan for open TCP ports within a specified range.
+# Simple Port Scanner using netcat (nc)
 
-## Features
+# Check if correct number of arguments is given
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <target-host> <start-port> <end-port>"
+    exit 1
+fi
 
-- Scan a target IP address or hostname for open TCP ports.
-- Customizable port range.
-- Simple and lightweight, using built-in Unix tools.
+TARGET=$1
+START_PORT=$2
+END_PORT=$3
 
-## Prerequisites
+echo "Scanning host: $TARGET"
+echo "Ports: $START_PORT to $END_PORT"
+echo "-------------------------------"
 
-- Bash shell
-- `nc` (Netcat)
+for ((port=$START_PORT; port<=$END_PORT; port++))
+do
+    nc -z -v -w 1 $TARGET $port 2>&1 | grep -q succeeded
+    if [ $? -eq 0 ]; then
+        echo "Port $port is OPEN"
+    else
+        echo "Port $port is CLOSED"
+    fi
+done
 
-Install Netcat if not available:
-```bash
-sudo apt install netcat  # Debian/Ubuntu
-sudo yum install nc      # RHEL/CentOS
-./port_scanner.sh 192.168.1.1 20 80
+
+
